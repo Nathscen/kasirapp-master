@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import {
   Navbar,
@@ -30,7 +32,8 @@ const NavbarComponent = () => {
   return (
     <Navbar className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand as={Link} to="/">
+        <FontAwesomeIcon icon={faBars} className="mr-2" />
+        <Navbar.Brand as={Link} to="/" className="mr-auto">
           <strong>Simplecash</strong>
         </Navbar.Brand>
         <Navbar.Toggle />
@@ -52,27 +55,18 @@ const NavbarComponent = () => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            <Dropdown className="ml-3">
-              <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                Profile
-              </Dropdown.Toggle>
+            {isLoggedIn && (
+              <Dropdown className="ml-3">
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  Profile
+                </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                <Dropdown.Item>Logout</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
           </Nav>
-          {isLoggedIn && (
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Profile
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Container } from "react-bootstrap";
-import { Hasil, ListCategories, Menus } from "../components";
+import { Hasil, Menus } from "../components";
 import { API_URL } from "../utils/constants";
 import axios from "axios";
 import swal from "sweetalert";
@@ -11,14 +11,13 @@ export default class Home extends Component {
 
     this.state = {
       menus: [],
-      categoriYangDipilih: "Makanan",
       keranjangs: [],
     };
   }
 
   componentDidMount() {
     axios
-      .get(API_URL + "products?category.nama=" + this.state.categoriYangDipilih)
+      .get(API_URL + "products?category.nama=" + this.state)
       .then((res) => {
         const menus = res.data;
         this.setState({ menus });
@@ -39,16 +38,16 @@ export default class Home extends Component {
   }
 
   componentDidUpdate(prevState) {
-    if(this.state.keranjangs !== prevState.keranjangs) {
+    if (this.state.keranjangs !== prevState.keranjangs) {
       axios
-      .get(API_URL + "keranjangs")
-      .then((res) => {
-        const keranjangs = res.data;
-        this.setState({ keranjangs });
-      })
-      .catch((error) => {
-        console.log("Error yaa ", error);
-      });
+        .get(API_URL + "keranjangs")
+        .then((res) => {
+          const keranjangs = res.data;
+          this.setState({ keranjangs });
+        })
+        .catch((error) => {
+          console.log("Error yaa ", error);
+        });
     }
   }
 
@@ -123,35 +122,31 @@ export default class Home extends Component {
   };
 
   render() {
-    const { menus, categoriYangDipilih, keranjangs } = this.state;
+    const { menus, keranjangs } = this.state;
     return (
-        <div className="mt-3">
-          <Container fluid>
-            <Row>
-              <ListCategories
-                changeCategory={this.changeCategory}
-                categoriYangDipilih={categoriYangDipilih}
-              />
-              <Col className="mt-3">
-                <h4>
-                  <strong>Daftar Produk</strong>
-                </h4>
-                <hr />
-                <Row className="overflow-auto menu">
-                  {menus &&
-                    menus.map((menu) => (
-                      <Menus
-                        key={menu.id}
-                        menu={menu}
-                        masukKeranjang={this.masukKeranjang}
-                      />
-                    ))}
-                </Row>
-              </Col>
-              <Hasil keranjangs={keranjangs} {...this.props}/>
-            </Row>
-          </Container>
-        </div>
+      <div className="mt-3">
+        <Container fluid>
+          <Row>
+            <Col className="mt-3">
+              <h4>
+                <strong>Daftar Produk</strong>
+              </h4>
+              <hr />
+              <Row className="overflow-auto menu">
+                {menus &&
+                  menus.map((menu) => (
+                    <Menus
+                      key={menu.id}
+                      menu={menu}
+                      masukKeranjang={this.masukKeranjang}
+                    />
+                  ))}
+              </Row>
+            </Col>
+            <Hasil keranjangs={keranjangs} {...this.props} />
+          </Row>
+        </Container>
+      </div>
     );
   }
 }

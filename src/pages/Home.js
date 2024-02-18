@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Container } from "react-bootstrap";
-import { Hasil, Menus } from "../components";
+import { Hasil, Menus, NavbarComponent } from "../components";
 import { API_URL } from "../utils/constants";
 import axios from "axios";
 import swal from "sweetalert";
@@ -16,25 +16,23 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get(API_URL + "products?category.nama=" + this.state)
-      .then((res) => {
-        const menus = res.data;
-        this.setState({ menus });
-      })
-      .catch((error) => {
-        console.log("Error yaa ", error);
+    const getData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        this.props.history.push("/login");
+      }
+      const response = await axios({
+        method: "get",
+        url: "http://127.0.0.1:8080/petugas/list_produk",
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksIm5hbWEiOiJhbmRpIiwicm9sZSI6MywiZW1haWwiOiJhbmRpQGdtYWlsLmNvbSIsImlhdCI6MTcwNjA3ODg4NH0.Vj0-Wuz809W8DbrDM_FSVWsM4Ar3Zs51IXC0TNmGxr4`,
+        },
       });
-
-    axios
-      .get(API_URL + "keranjangs")
-      .then((res) => {
-        const keranjangs = res.data;
-        this.setState({ keranjangs });
-      })
-      .catch((error) => {
-        console.log("Error yaa ", error);
+      this.setState({
+        menus: response.data.data,
       });
+    };
+    getData();
   }
 
   componentDidUpdate(prevState) {
@@ -51,26 +49,9 @@ export default class Home extends Component {
     }
   }
 
-  changeCategory = (value) => {
-    this.setState({
-      categoriYangDipilih: value,
-      menus: [],
-    });
-
-    axios
-      .get(API_URL + "products?category.nama=" + value)
-      .then((res) => {
-        const menus = res.data;
-        this.setState({ menus });
-      })
-      .catch((error) => {
-        console.log("Error yaa ", error);
-      });
-  };
-
   masukKeranjang = (value) => {
     axios
-      .get(API_URL + "keranjangs?product.id=" + value.id)
+      .get(API_URL + "petugas/list_produk?id_produk" + value.id)
       .then((res) => {
         if (res.data.length === 0) {
           const keranjang = {
@@ -124,28 +105,31 @@ export default class Home extends Component {
   render() {
     const { menus, keranjangs } = this.state;
     return (
-      <div className="mt-3">
-        <Container fluid>
-          <Row>
-            <Col className="mt-3">
-              <h4>
-                <strong>Daftar Produk</strong>
-              </h4>
-              <hr />
-              <Row className="overflow-auto menu">
-                {menus &&
-                  menus.map((menu) => (
-                    <Menus
-                      key={menu.id}
-                      menu={menu}
-                      masukKeranjang={this.masukKeranjang}
-                    />
-                  ))}
-              </Row>
-            </Col>
-            <Hasil keranjangs={keranjangs} {...this.props} />
-          </Row>
-        </Container>
+      <div>
+        <NavbarComponent />
+        <div className="mt-3">
+          <Container fluid>
+            <Row>
+              <Col className="mt-3">
+                <h4>
+                  <strong>Daftar Produk</strong>
+                </h4>
+                <hr />
+                <Row className="overflow-auto menu">
+                  {menus &&
+                    menus.map((menu) => (
+                      <Menus
+                        key={menu.id_produk}
+                        menu={menu}
+                        masukKeranjang={this.masukKeranjang}
+                      />
+                    ))}
+                </Row>
+              </Col>
+              <Hasil keranjangs={keranjangs} {...this.props} />
+            </Row>
+          </Container>
+        </div>
       </div>
     );
   }

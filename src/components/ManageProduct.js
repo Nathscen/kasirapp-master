@@ -26,7 +26,7 @@ export default class ManageProduct extends Component {
       <Container>
         <Row>
           <Col>
-            <Button variant="primary" className="mb-3 mt-3 ml-3">
+            <Button variant="primary" className="mb-3 mt-3 ml-3" as={Link} to="/add-product">
               Add Product
             </Button>
           </Col>

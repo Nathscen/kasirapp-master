@@ -9,6 +9,11 @@ import ManageCustomerPage from "./pages/ManageCustomerPage";
 import ManageProductPage from "./pages/ManageProductPage";
 import ManageWorkerPage from "./pages/ManageWorkerPage";
 import ManageTransactionPage from "./pages/ManageTransactionPage";
+import EditProductPage from "./pages/EditProductPage";
+import AddWorkPage from "./pages/AddWorkPage";
+import EditWorkerPage from "./pages/EditWorkerPage";
+import AddCustomerPage from "./pages/AddCustomerPage";
+import QRCodePage from "./pages/QRCodePage";
 
 export default class App extends Component {
   render() {
@@ -23,6 +28,7 @@ export default class App extends Component {
             <Route path="/manage-product" component={ManageProductPage} exact />
             <Route path="/add-product" component={AddProductPage} exact />
             <Route path="/dashboard" component={DashboardPage} exact />
+            <Route path="/edit-product" component={EditProductPage} exact />
             <Route
               path="/manage-customer"
               component={ManageCustomerPage}
@@ -34,6 +40,10 @@ export default class App extends Component {
               component={ManageTransactionPage}
               exact
             />
+            <Route path="/add-worker" component={AddWorkPage} exact />
+            <Route path="/edit-worker" component={EditWorkerPage} exact />
+            <Route path="/add-customer" component={AddCustomerPage} exact />
+            <Route path="/qr-generator" component={QRCodePage} exact />
           </Switch>
         </main>
       </BrowserRouter>

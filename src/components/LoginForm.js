@@ -10,7 +10,7 @@ const LoginForm = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errMsg] = useState("");
+  const [errMsg, setErrMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,10 +30,16 @@ const LoginForm = () => {
         "Authorization"
       ] = `Bearer ${response.data.data.token}`;
 
-      // Redirect to home page after successful login
-      history.push("/");
+      // Redirect to dashboard page after successful login
+      const role = response.data.data.data_user.role;
+      if (role === 1) {
+        history.push("/dashboard");
+      } else if (role === 2) {
+        history.push("/");
+      }
     } catch (err) {
       console.log(err);
+      setErrMsg(err.response.data.message);
     }
   };
 
@@ -65,6 +71,8 @@ const LoginForm = () => {
             />
           </Form.Group>
 
+          {errMsg && <p className="text-center text-danger">{errMsg}</p>}
+
           <Button
             className="w-50"
             style={{ background: "#365486" }}
@@ -74,12 +82,13 @@ const LoginForm = () => {
             Login
           </Button>
           <p className="text-center mt-3">
-            Don’t have an account ?
-            <Button variant="link" as={Link} to="/register">Register</Button>
+            Don't have an account?{" "}
+            <Link to="/register" style={{ color: "#365486" }}>
+              Register
+            </Link>
           </p>
         </Form>
       </Container>
-      {errMsg && <p>{errMsg}</p>}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Hasil, Menus, NavbarComponent } from "../components";
 import { API_URL } from "../utils/constants";
 import axios from "axios";
 import swal from "sweetalert";
+import Sidebar from "../components/Sidebar";
 
 export default class Home extends Component {
   constructor(props) {
@@ -110,6 +111,7 @@ export default class Home extends Component {
         <div className="mt-3">
           <Container fluid>
             <Row>
+              <Col md={3}><Sidebar /></Col>
               <Col className="mt-3">
                 <h4>
                   <strong>Daftar Produk</strong>

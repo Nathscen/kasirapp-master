@@ -14,6 +14,8 @@ import AddWorkPage from "./pages/AddWorkPage";
 import EditWorkerPage from "./pages/EditWorkerPage";
 import AddCustomerPage from "./pages/AddCustomerPage";
 import QRCodePage from "./pages/QRCodePage";
+import DetailTransaksiPage from "./pages/DetailTransaksiPage";
+import HomeKasir from "./pages/HomeKasir";
 
 export default class App extends Component {
   render() {
@@ -22,6 +24,7 @@ export default class App extends Component {
         <main>
           <Switch>
             <Route path="/" component={Home} exact />
+            <Route path="/kasir" component={HomeKasir} exact />
             <Route path="/sukses" component={Sukses} exact />
             <Route path="/login" component={LoginPage} exact />
             <Route path="/register" component={RegisterPage} exact />
@@ -44,6 +47,7 @@ export default class App extends Component {
             <Route path="/edit-worker" component={EditWorkerPage} exact />
             <Route path="/add-customer" component={AddCustomerPage} exact />
             <Route path="/qr-generator" component={QRCodePage} exact />
+            <Route path="/detail-penjualan" component={DetailTransaksiPage} exact />
           </Switch>
         </main>
       </BrowserRouter>

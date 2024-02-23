@@ -4,9 +4,9 @@ import { Hasil, Menus, NavbarComponent } from "../components";
 import { API_URL } from "../utils/constants";
 import axios from "axios";
 import swal from "sweetalert";
-import Sidebar from "../components/Sidebar";
+import SidebarKasir from "../components/SidebarKasir";
 
-export default class Home extends Component {
+export default class HomeKasir extends Component {
   constructor(props) {
     super(props);
 
@@ -111,7 +111,9 @@ export default class Home extends Component {
         <div className="mt-3">
           <Container fluid>
             <Row>
-              <Col md={3}><Sidebar /></Col>
+              <Col md={3}>
+                <SidebarKasir />
+              </Col>
               <Col className="mt-3">
                 <h4>
                   <strong>Daftar Produk</strong>
@@ -128,7 +130,7 @@ export default class Home extends Component {
                     ))}
                 </Row>
               </Col>
-              <Hasil keranjangs={keranjangs} {...this.props} /> 
+              <Hasil keranjangs={keranjangs} {...this.props} />
             </Row>
           </Container>
         </div>

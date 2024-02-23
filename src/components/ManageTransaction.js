@@ -13,12 +13,10 @@ function ManageTransaction() {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>#</th>
+            <th>ID Transaction</th>
             <th>Date</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>Total Price</th>
+            <th>Total Items</th>
           </tr>
         </thead>
         <tbody>
@@ -28,14 +26,6 @@ function ManageTransaction() {
               <td>{transaction.date}</td>
               <td>{transaction.type}</td>
               <td>{transaction.amount}</td>
-              <td>
-                <span className={`badge bg-${transaction.status === 'Completed' ? 'success' : transaction.status === 'Pending' ? 'primary' : 'danger'} text-uppercase`}>
-                  {transaction.status}
-                </span>
-              </td>
-              <td>
-                <button className="btn btn-link">Edit</button>
-              </td>
             </tr>
           ))}
         </tbody>

@@ -1,14 +1,32 @@
 import React from "react";
 import { Container, Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import Swal from "sweetalert2";
 
 const workerData = [
-  { id: 1, name: "John Doe", position: "Software Engineer", status: "Active" },
-  { id: 2, name: "Alex Ray", position: "Consultant", status: "Onboarding" },
-  { id: 3, name: "Kate Hunington", position: "Designer", status: "Awaiting" },
+  { id: 1, name: "John Doe"},
+  { id: 2, name: "Alex Ray"},
+  { id: 3, name: "Kate Hunington"},
 ];
 
 function ManageWorker() {
+  const handleDelete = (workerId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        workerData(workerData.filter((worker) => worker.id !== workerId));
+        Swal.fire("Deleted!", "The worker has been deleted.", "success");
+      }
+    });
+  };
+
   return (
     <Container className="mt-5">
       <Button variant="primary" className="mb-3" as={Link} to="/add-worker">
@@ -17,10 +35,9 @@ function ManageWorker() {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Status</th>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Username</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -46,23 +63,21 @@ function ManageWorker() {
                   </div>
                 </div>
               </td>
-              <td>{worker.position}</td>
+              <td></td>
               <td>
-                <span
-                  className={`badge bg-${
-                    worker.status === "Active"
-                      ? "success"
-                      : worker.status === "Onboarding"
-                      ? "primary"
-                      : "warning"
-                  } text-uppercase`}
+                <Button
+                  variant="primary"
+                  className="text-decoration-none mr-2"
+                  as={Link}
+                  to="/edit-worker"
                 >
-                  {worker.status}
-                </span>
-              </td>
-              <td>
-                <Button variant="primary" className="text-decoration-none" as={Link} to="/edit-worker">
                   Edit
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(worker.id)}
+                >
+                  Delete
                 </Button>
               </td>
             </tr>

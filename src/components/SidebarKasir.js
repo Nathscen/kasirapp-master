@@ -9,7 +9,7 @@ import {
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
-const Sidebar = () => {
+const SidebarKasir = () => {
   return (
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
@@ -20,39 +20,11 @@ const Sidebar = () => {
             <NavLink
               exact
               as={Link}
-              to="/manage-customer"
-              activeClassName="activeClicked"
-            >
-              <CDBSidebarMenuItem icon="columns">
-                Manage Customer
-              </CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink
-              exact
-              as={Link}
               to="/manage-product"
               activeClassName="activeClicked"
             >
               <CDBSidebarMenuItem icon="table">
                 Manage Product
-              </CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink
-              exact
-              as={Link}
-              to="/manage-worker"
-              activeClassName="activeClicked"
-            >
-              <CDBSidebarMenuItem icon="user">Manage Worker</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink
-              exact
-              as={Link}
-              to="/manage-transaction"
-              activeClassName="activeClicked"
-            >
-              <CDBSidebarMenuItem icon="chart-line">
-                Manage Transaction
               </CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/login" activeClassName="activeClicked">
@@ -69,4 +41,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarKasir;

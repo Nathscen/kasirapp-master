@@ -19,6 +19,8 @@ export default function EditProductForm({ onSubmit, initialProductValues }) {
   };
 
   return (
+    <div>
+      <h3 className="text-center mb-5 mt-5">Edit Product</h3>
     <Form onSubmit={(event) => onSubmit(event, product)}>
       <Form.Group as={Col} controlId="productImage">
         <Form.Label>Product Image</Form.Label>
@@ -64,5 +66,6 @@ export default function EditProductForm({ onSubmit, initialProductValues }) {
         </Button>
       </Form.Group>
     </Form>
+    </div>
   );
 }

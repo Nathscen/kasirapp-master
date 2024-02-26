@@ -8,23 +8,19 @@ const AddCustomerForm = () => {
         <Form className="d-flex justify-content-center align-items-center flex-column gap-3">
           <h3 className="text-center text-white">Customer Data</h3>
           <Form.Group className="mb-3 w-100" controlId="formName">
-            <Form.Label>Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter name" />
+            <Form.Control type="text" placeholder="Name" />
           </Form.Group>
 
           <Form.Group className="mb-3 w-100" controlId="formEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" />
+            <Form.Control type="email" placeholder="Email" />
           </Form.Group>
 
           <Form.Group className="mb-3 w-100" controlId="formAddress">
-            <Form.Label>Address</Form.Label>
-            <Form.Control type="text" placeholder="Enter address" />
+            <Form.Control type="text" placeholder="Address" />
           </Form.Group>
 
           <Form.Group className="mb-3 w-100" controlId="formPhone">
-            <Form.Label>Phone number</Form.Label>
-            <Form.Control type="tel" placeholder="Enter phone number" />
+            <Form.Control type="tel" placeholder="Phone number" />
           </Form.Group>
 
           <Button

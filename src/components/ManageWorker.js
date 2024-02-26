@@ -1,16 +1,38 @@
-import React from "react";
+import React, { Component } from "react";
 import { Container, Table, Button } from "react-bootstrap";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
-const workerData = [
-  { id: 1, name: "John Doe"},
-  { id: 2, name: "Alex Ray"},
-  { id: 3, name: "Kate Hunington"},
-];
+class ManageWorker extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      workers: [],
+    };
+  }
 
-function ManageWorker() {
-  const handleDelete = (workerId) => {
+  componentDidMount() {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIyLCJuYW1hIjoic2FrdXJhIiwicm9sZSI6MSwiZW1haWwiOiJzYWt1cmFAZ21haWwuY29tIiwiaWF0IjoxNzA4ODQ5Mzk5fQ.oujHkXukgj_bTCx7YSSx5_6NwOWb_7aXzLGlra9uvBU";
+    axios
+      .get("http://127.0.0.1:8080/admin/list_worker", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log("Response from API:", response.data);
+        this.setState({ workers: response.data.data });
+      })
+      .catch((error) => {
+        console.error("Error fetching workers:", error);
+      });
+  }
+
+  handleDelete = (workerId) => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIyLCJuYW1hIjoic2FrdXJhIiwicm9sZSI6MSwiZW1haWwiOiJzYWt1cmFAZ21haWwuY29tIiwiaWF0IjoxNzA4ODQ5Mzk5fQ.oujHkXukgj_bTCx7YSSx5_6NwOWb_7aXzLGlra9uvBU";
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -21,71 +43,70 @@ function ManageWorker() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        workerData(workerData.filter((worker) => worker.id !== workerId));
-        Swal.fire("Deleted!", "The worker has been deleted.", "success");
+        axios
+          .delete(`http://127.0.0.1:8080/admin/delete_worker/${workerId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(() => {
+            this.setState({
+              workers: this.state.workers.filter(
+                (worker) => worker.iduser !== workerId
+              ),
+            });
+            Swal.fire("Deleted!", "The worker has been deleted.", "success");
+          })
+          .catch((error) => {
+            console.error("Error deleting worker:", error);
+          });
       }
     });
   };
 
-  return (
-    <Container className="mt-5">
-      <Button variant="primary" className="mb-3" as={Link} to="/add-worker">
-        Add Worker
-      </Button>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Username</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {workerData.map((worker) => (
-            <tr key={worker.id}>
-              <td>{worker.id}</td>
-              <td>
-                <div className="d-flex align-items-center">
-                  <img
-                    src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                    alt=""
-                    style={{
-                      width: "45px",
-                      height: "45px",
-                      objectFit: "cover",
-                    }}
-                    className="rounded-circle me-3"
-                  />
-                  <div>
-                    <p className="fw-bold mb-1">{worker.name}</p>
-                    <p className="text-muted mb-0">john.doe@gmail.com</p>
-                  </div>
-                </div>
-              </td>
-              <td></td>
-              <td>
-                <Button
-                  variant="primary"
-                  className="text-decoration-none mr-2"
-                  as={Link}
-                  to="/edit-worker"
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => handleDelete(worker.id)}
-                >
-                  Delete
-                </Button>
-              </td>
+  render() {
+    return (
+      <Container className="mt-5">
+        <Button variant="primary" className="mb-3" as={Link} to="/add-worker">
+          Add Worker
+        </Button>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Username</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Container>
-  );
+          </thead>
+          <tbody>
+            {this.state.workers.map((worker) => (
+              <tr key={worker.iduser}>
+                <td>{worker.iduser}</td>
+                <td>{worker.email}</td>
+                <td>{worker.username}</td>
+                <td>
+                  <Button
+                    variant="primary"
+                    className="text-decoration-none mr-2"
+                    as={Link}
+                    to={`/edit-worker/${worker.iduser}`} // Disertakan ID pekerja dalam URL
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => this.handleDelete(worker.iduser)}
+                  >
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Container>
+    );
+  }
 }
-
 export default ManageWorker;

@@ -1,9 +1,8 @@
-import { Container } from "react-bootstrap";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Link, useHistory } from "react-router-dom";
 import React, { useState } from "react";
-import client from "../utils/axioshelper";
+import { Container, Form, Button } from "react-bootstrap";
+import { Link, useHistory } from "react-router-dom";
+import client from '../utils/axioshelper';
+
 
 const LoginForm = () => {
   const history = useHistory();
@@ -11,9 +10,11 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading state to true
 
     const payload = {
       email: email,
@@ -21,7 +22,7 @@ const LoginForm = () => {
     };
 
     try {
-      const response = await client.post("/login", payload);
+      const response = await client.post("/login", payload); // Use axios directly
       console.log(response.data.data.data_user);
       console.log(response.data.data.token);
 
@@ -30,16 +31,17 @@ const LoginForm = () => {
         "Authorization"
       ] = `Bearer ${response.data.data.token}`;
 
-      // Redirect to dashboard page after successful login
+      // Redirect to appropriate page based on user role
       const role = response.data.data.data_user.role;
       if (role === 1) {
         history.push("/dashboard");
       } else if (role === 2) {
-        history.push("/");
+        history.push("/kasir");
       }
     } catch (err) {
       console.log(err);
-      setErrMsg(err.response.data.message);
+      setLoading(false); // Set loading state to false
+      setErrMsg("Failed to login. Please check your credentials."); // Generic error message
     }
   };
 
@@ -51,24 +53,26 @@ const LoginForm = () => {
           onSubmit={handleSubmit}
         >
           <h2 className="text-center text-white">Login</h2>
-          <Form.Group className="mb-3 w-100">
+          <Form.Group className="mb-3 w-100" controlId="email">
             <Form.Control
               type="text"
-              id="email"
-              placeholder="email"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              isInvalid={errMsg !== ""} // Set isInvalid if error message exists
             />
+            <Form.Control.Feedback type="invalid">Invalid email or password.</Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group className="mb-3 w-100">
+          <Form.Group className="mb-3 w-100" controlId="password">
             <Form.Control
               type="password"
-              id="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              isInvalid={errMsg !== ""} // Set isInvalid if error message exists
             />
+            <Form.Control.Feedback type="invalid">Invalid email or password.</Form.Control.Feedback>
           </Form.Group>
 
           {errMsg && <p className="text-center text-danger">{errMsg}</p>}
@@ -78,8 +82,9 @@ const LoginForm = () => {
             style={{ background: "#365486" }}
             variant="primary"
             type="submit"
+            disabled={loading} // Disable button while loading
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </Button>
           <p className="text-center mt-3">
             Don't have an account?{" "}

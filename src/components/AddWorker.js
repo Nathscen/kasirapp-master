@@ -1,14 +1,51 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Col } from "react-bootstrap";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function AddWorker() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA4ODg2MjMyfQ.h2FuL4Rqp-O7tGG22NoLLyTF2VD5umkRxO_sP2aQacU";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8080/admin/add_worker",
+        {
+          username: name,
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Jika respons dari server menunjukkan bahwa pekerja telah berhasil ditambahkan
+      if (response.status === 200) {
+        // Tampilkan SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Worker added successfully",
+        });
+
+        // Reset form state
+        setName("");
+        setEmail("");
+        setPassword("");
+      }
+    } catch (error) {
+      // Handle error, for example show error message
+      console.error("Error adding worker:", error);
+    }
   };
 
   return (

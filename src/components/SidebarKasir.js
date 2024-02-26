@@ -20,7 +20,7 @@ const SidebarKasir = () => {
             <NavLink
               exact
               as={Link}
-              to="/manage-product"
+              to="/manage-product-kasir"
               activeClassName="activeClicked"
             >
               <CDBSidebarMenuItem icon="table">

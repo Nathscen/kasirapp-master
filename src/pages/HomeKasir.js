@@ -26,7 +26,7 @@ export default class HomeKasir extends Component {
         method: "get",
         url: "http://127.0.0.1:8080/petugas/list_produk",
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksIm5hbWEiOiJhbmRpIiwicm9sZSI6MywiZW1haWwiOiJhbmRpQGdtYWlsLmNvbSIsImlhdCI6MTcwNjA3ODg4NH0.Vj0-Wuz809W8DbrDM_FSVWsM4Ar3Zs51IXC0TNmGxr4`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjExLCJuYW1hIjoiY2FoeWEiLCJyb2xlIjozLCJlbWFpbCI6ImNhaHlhQGdtYWlsLmNvbSIsImlhdCI6MTcwODg4NTEzNH0.OCjAt4aqH2M4uB8_VCMfqdZyy7auM0FG_0yP_IyBVf8`,
         },
       });
       this.setState({
@@ -52,7 +52,7 @@ export default class HomeKasir extends Component {
 
   masukKeranjang = (value) => {
     axios
-      .get(API_URL + "petugas/list_produk?id_produk" + value.id)
+      .get("petugas/list_produk?id_produk" + value.id)
       .then((res) => {
         if (res.data.length === 0) {
           const keranjang = {
@@ -138,3 +138,4 @@ export default class HomeKasir extends Component {
     );
   }
 }
+

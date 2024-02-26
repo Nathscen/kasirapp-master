@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import { Hasil, Menus, NavbarComponent } from "../components";
-import { API_URL } from "../utils/constants";
 import axios from "axios";
-import swal from "sweetalert";
 import Sidebar from "../components/Sidebar";
 
 export default class Home extends Component {
@@ -26,7 +24,7 @@ export default class Home extends Component {
         method: "get",
         url: "http://127.0.0.1:8080/petugas/list_produk",
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjksIm5hbWEiOiJhbmRpIiwicm9sZSI6MywiZW1haWwiOiJhbmRpQGdtYWlsLmNvbSIsImlhdCI6MTcwNjA3ODg4NH0.Vj0-Wuz809W8DbrDM_FSVWsM4Ar3Zs51IXC0TNmGxr4`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYsIm5hbWEiOiJrYXNpciIsInJvbGUiOjMsImVtYWlsIjoia2FzaXJAZ21haWwuY29tIiwiaWF0IjoxNzA4ODkzNjk1fQ.KYs-RbT1jNb68UXM9VXQCiztQ0L8K1YvScZ9NjUuKGs`,
         },
       });
       this.setState({
@@ -35,74 +33,6 @@ export default class Home extends Component {
     };
     getData();
   }
-
-  componentDidUpdate(prevState) {
-    if (this.state.keranjangs !== prevState.keranjangs) {
-      axios
-        .get(API_URL + "keranjangs")
-        .then((res) => {
-          const keranjangs = res.data;
-          this.setState({ keranjangs });
-        })
-        .catch((error) => {
-          console.log("Error yaa ", error);
-        });
-    }
-  }
-
-  masukKeranjang = (value) => {
-    axios
-      .get(API_URL + "petugas/list_produk?id_produk" + value.id)
-      .then((res) => {
-        if (res.data.length === 0) {
-          const keranjang = {
-            jumlah: 1,
-            total_harga: value.harga,
-            product: value,
-          };
-
-          axios
-            .post(API_URL + "keranjangs", keranjang)
-            .then((res) => {
-              swal({
-                title: "Sukses Masuk Keranjang",
-                text: "Sukses Masuk Keranjang " + keranjang.product.nama,
-                icon: "success",
-                button: false,
-                timer: 1500,
-              });
-            })
-            .catch((error) => {
-              console.log("Error yaa ", error);
-            });
-        } else {
-          const keranjang = {
-            jumlah: res.data[0].jumlah + 1,
-            total_harga: res.data[0].total_harga + value.harga,
-            product: value,
-          };
-
-          axios
-            .put(API_URL + "keranjangs/" + res.data[0].id, keranjang)
-            .then((res) => {
-              swal({
-                title: "Sukses Masuk Keranjang",
-                text: "Sukses Masuk Keranjang " + keranjang.product.nama,
-                icon: "success",
-                button: false,
-                timer: 1500,
-              });
-            })
-            .catch((error) => {
-              console.log("Error yaa ", error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.log("Error yaa ", error);
-      });
-  };
-
   render() {
     const { menus, keranjangs } = this.state;
     return (
@@ -111,24 +41,25 @@ export default class Home extends Component {
         <div className="mt-3">
           <Container fluid>
             <Row>
-              <Col md={3}><Sidebar /></Col>
+              <Col md={3}>
+                <Sidebar />
+              </Col>
               <Col className="mt-3">
                 <h4>
                   <strong>Daftar Produk</strong>
                 </h4>
                 <hr />
                 <Row className="overflow-auto menu">
-                  {menus &&
-                    menus.map((menu) => (
-                      <Menus
-                        key={menu.id_produk}
-                        menu={menu}
-                        masukKeranjang={this.masukKeranjang}
-                      />
-                    ))}
+                  {menus.map((menu) => (
+                    <Menus
+                      key={menu.id_produk}
+                      menu={menu}
+                      masukKeranjang={this.masukKeranjang}
+                    />
+                  ))}
                 </Row>
               </Col>
-              <Hasil keranjangs={keranjangs} {...this.props} /> 
+              <Hasil keranjangs={keranjangs} {...this.props} />
             </Row>
           </Container>
         </div>

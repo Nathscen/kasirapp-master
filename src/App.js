@@ -32,7 +32,7 @@ export default class App extends Component {
             <Route path="/manage-product" component={ManageProductPage} exact />
             <Route path="/add-product" component={AddProductPage} exact />
             <Route path="/dashboard" component={DashboardPage} exact />
-            <Route path="/edit-product" component={EditProductPage} exact />
+            <Route path="/edit-product/:productId" component={EditProductPage} exact />
             <Route
               path="/manage-product-kasir"
               component={ManageProductKasirPage}

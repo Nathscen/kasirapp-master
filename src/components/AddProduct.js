@@ -47,14 +47,15 @@ class AddProduct extends Component {
     formData.append("nama_produk", this.state.productName);
     formData.append("harga", this.state.price);
     formData.append("stok", this.state.stock);
-    formData.append("gambar", this.state.image);
+    formData.append("file", this.state.image);
 
     console.log("Form Data:", formData); // Log form data to inspect
 
     const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYsIm5hbWEiOiJrYXNpciIsInJvbGUiOjMsImVtYWlsIjoia2FzaXJAZ21haWwuY29tIiwiaWF0IjoxNzA4ODkzNjk1fQ.KYs-RbT1jNb68UXM9VXQCiztQ0L8K1YvScZ9NjUuKGs";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA1NjQ1NzAzfQ.83drLyuMv2lRYB0nVup6GSuTjrHsbQobSCFUeKcSsls";
+
     axios
-      .post("http://127.0.0.1:8080/petugas/add_produk", formData, {
+      .post("http://127.0.0.1:8080/admin/add_produk", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data", // Ensure correct content type

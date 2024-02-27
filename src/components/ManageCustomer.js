@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Container, Pagination } from "react-bootstrap";
+import { Table, Button, Container, Pagination, Form } from "react-bootstrap";
 import axios from "axios";
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
+  const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [error, setError] = useState(null); // Menggunakan variabel error
   const [page, setPage] = useState(1);
   const [perPage] = useState(5); // Menentukan jumlah baris per halaman
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -22,6 +24,7 @@ const ManageCustomer = () => {
           }
         );
         setCustomers(response.data.data); // Mengambil data dari respons
+        setFilteredCustomers(response.data.data); // Menyimpan data awal tanpa filter
       } catch (error) {
         console.error("Error fetching customers:", error);
         setError("Error fetching customers"); // Menyimpan pesan kesalahan dalam variabel error
@@ -36,15 +39,24 @@ const ManageCustomer = () => {
     // Tambahkan logika penghapusan data pelanggan di sini
   };
 
-  const pageCount = Math.ceil(customers.length / perPage);
+  const pageCount = Math.ceil(filteredCustomers.length / perPage);
   const pages = [...Array(pageCount).keys()].map((i) => i + 1);
 
   const startIndex = (page - 1) * perPage;
   const endIndex = startIndex + perPage;
-  const currentCustomers = customers.slice(startIndex, endIndex);
+  const currentCustomers = filteredCustomers.slice(startIndex, endIndex);
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
+  };
+
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value;
+    setSearchTerm(searchTerm);
+    const filtered = customers.filter((customer) =>
+      customer.nama.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredCustomers(filtered);
   };
 
   return (
@@ -52,6 +64,14 @@ const ManageCustomer = () => {
       <Container>
         {error && <p className="text-danger">{error}</p>}{" "}
         {/* Menampilkan pesan kesalahan jika terjadi */}
+        <div className="d-flex justify-content-end mb-3">
+          <Form.Control
+            type="text"
+            placeholder="Search by name"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
         <div style={{ overflowX: "auto" }}>
           {" "}
           {/* Mengatur scroll horizontal */}

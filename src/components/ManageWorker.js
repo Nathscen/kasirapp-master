@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Table, Button } from "react-bootstrap";
+import { Container, Table, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -9,12 +9,14 @@ class ManageWorker extends Component {
     super(props);
     this.state = {
       workers: [],
+      searchTerm: "",
     };
   }
 
   componentDidMount() {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIyLCJuYW1hIjoic2FrdXJhIiwicm9sZSI6MSwiZW1haWwiOiJzYWt1cmFAZ21haWwuY29tIiwiaWF0IjoxNzA4ODQ5Mzk5fQ.oujHkXukgj_bTCx7YSSx5_6NwOWb_7aXzLGlra9uvBU";
+    // Ambil token dari local storage
+    const token = localStorage.getItem("token");
+
     axios
       .get("http://127.0.0.1:8080/admin/list_worker", {
         headers: {
@@ -31,8 +33,9 @@ class ManageWorker extends Component {
   }
 
   handleDelete = (workerId) => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIyLCJuYW1hIjoic2FrdXJhIiwicm9sZSI6MSwiZW1haWwiOiJzYWt1cmFAZ21haWwuY29tIiwiaWF0IjoxNzA4ODQ5Mzk5fQ.oujHkXukgj_bTCx7YSSx5_6NwOWb_7aXzLGlra9uvBU";
+    // Ambil token dari local storage
+    const token = localStorage.getItem("token");
+
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -64,12 +67,28 @@ class ManageWorker extends Component {
     });
   };
 
+  handleSearch = (event) => {
+    this.setState({ searchTerm: event.target.value });
+  };
+
   render() {
+    const filteredWorkers = this.state.workers.filter((worker) =>
+      worker.email.toLowerCase().includes(this.state.searchTerm.toLowerCase())
+    );
+
     return (
       <Container className="mt-5">
         <Button variant="primary" className="mb-3" as={Link} to="/add-worker">
           Add Worker
         </Button>
+        <Form className="mb-3 float-right">
+          <Form.Control
+            type="text"
+            placeholder="Search by email"
+            value={this.state.searchTerm}
+            onChange={this.handleSearch}
+          />
+        </Form>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -80,7 +99,7 @@ class ManageWorker extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.workers.map((worker) => (
+            {filteredWorkers.map((worker) => (
               <tr key={worker.iduser}>
                 <td>{worker.iduser}</td>
                 <td>{worker.email}</td>

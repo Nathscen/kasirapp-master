@@ -5,27 +5,30 @@ import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function EditProductForm() {
-  const { productId } = useParams(); // Menggunakan useParams untuk mendapatkan nilai productId dari URL
+  const { productId } = useParams();
   const [product, setProduct] = useState({
     nama_produk: "",
     harga: "",
     stok: "",
-    image: null,
+    image: "",
   });
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        const token = localStorage.getItem("token");
         const response = await axios.get(
           `http://127.0.0.1:8080/admin/get_produk/${productId}`,
           {
             headers: {
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWEiOiJyaGV6YSIsInJvbGUiOjIsImVtYWlsIjoicmhlemFAZ21haWwuY29tIiwiaWF0IjoxNzA1NjMwNzIzfQ.oei98eWYpv_HadoOWyItxBP0VM5gzbpr0HWanZviE8c",
+              Authorization: `Bearer ${token}`,
             },
           }
         );
-        setProduct(response.data);
+        if (response.data) {
+          setProduct(response.data);
+          console.log("Product details:", response.data.data);
+        }
       } catch (error) {
         console.error("Error fetching product details:", error);
       }
@@ -59,30 +62,30 @@ function EditProductForm() {
       formData.append("stok", product.stok);
       formData.append("file", product.image);
 
+      const token = localStorage.getItem("token");
       await axios.patch(
         `http://127.0.0.1:8080/admin/edit_produk/${productId}`,
         formData,
         {
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA1NDkxOTQ5fQ.pOr6cIx8R5btGAfTCWCTZ43DRBUk4RNO0xA0CG88LbM",
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      // Menampilkan SweetAlert ketika produk berhasil diperbarui
       Swal.fire("Success", "Product updated successfully!", "success");
-
       console.log("Product updated successfully!");
     } catch (error) {
       console.error("Error updating product:", error);
     }
   };
 
+  console.log(product);
+
   return (
     <div>
-      <h3 className="text-center mb-5 mt-5">Edit Product</h3>
+      <h3 className="text-center mb-5 mt-5">Edit Product </h3>
       <Form onSubmit={handleFormSubmit}>
         <Form.Group as={Col} controlId="productImage">
           <Form.Label>Product Image</Form.Label>
@@ -94,7 +97,7 @@ function EditProductForm() {
           <Form.Control
             type="text"
             name="nama_produk"
-            value={product.nama_produk || ""}
+            defaultValue={product?.data?.nama_produk}
             onChange={handleInputChange}
             required
           />
@@ -105,7 +108,7 @@ function EditProductForm() {
           <Form.Control
             type="number"
             name="harga"
-            value={product.harga || ""}
+            defaultValue={product?.data?.harga} // Menambahkan value dari state product
             onChange={handleInputChange}
             required
           />
@@ -116,7 +119,7 @@ function EditProductForm() {
           <Form.Control
             type="number"
             name="stok"
-            value={product.stok || ""}
+            defaultValue={product?.data?.stok} // Menambahkan value dari state product
             onChange={handleInputChange}
             required
           />

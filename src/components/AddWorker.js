@@ -7,13 +7,13 @@ function AddWorker() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA4ODg2MjMyfQ.h2FuL4Rqp-O7tGG22NoLLyTF2VD5umkRxO_sP2aQacU";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem("token"); // Ambil token dari local storage
+
       const response = await axios.post(
         "http://127.0.0.1:8080/admin/add_worker",
         {

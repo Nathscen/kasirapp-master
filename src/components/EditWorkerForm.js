@@ -15,8 +15,7 @@ function EditWorkerForm() {
     async function fetchWorkerData() {
       try {
         const url = `http://127.0.0.1:8080/admin/get_worker/${workerId}`;
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA4ODg2MjMyfQ.h2FuL4Rqp-O7tGG22NoLLyTF2VD5umkRxO_sP2aQacU";
+        const token = localStorage.getItem("token");
         const response = await fetch(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -35,12 +34,11 @@ function EditWorkerForm() {
     }
 
     fetchWorkerData();
-  }, [workerId]);
+  }, [workerId]); // Ensure useEffect runs when workerId changes
 
   const handleEdit = async () => {
     const url = `http://127.0.0.1:8080/admin/edit_worker/${workerId}`;
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA4ODg2MjMyfQ.h2FuL4Rqp-O7tGG22NoLLyTF2VD5umkRxO_sP2aQacU";
+    const token = localStorage.getItem("token"); // Ambil token dari local storage
 
     const data = {
       username: username, // Update username field

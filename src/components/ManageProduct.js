@@ -2,20 +2,21 @@ import React, { Component } from "react";
 import { Container, Table, Button, Row, Col, Form } from "react-bootstrap";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 
 class ManageProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
       products: [],
-      filteredProducts: [], // Menambahkan state untuk menyimpan hasil filter
+      filteredProducts: [],
     };
   }
 
   componentDidMount() {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA1NTcyODQ1fQ.HvG_Fz_5XcBMalVYjbT4u9Vv_SW_nHTFaydXBWCuxwc";
+    // Ambil token dari local storage
+    const token = localStorage.getItem("token");
+
     axios
       .get("http://127.0.0.1:8080/admin/list_produk", {
         headers: {
@@ -27,16 +28,18 @@ class ManageProduct extends Component {
         this.setState({
           products: response.data.data,
           filteredProducts: response.data.data,
-        }); // Mengatur kedua state
+        });
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
+        Swal.fire("Error!", "Failed to fetch products.", "error");
       });
   }
 
   handleDelete = async (productId) => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIyLCJuYW1hIjoic2FrdXJhIiwicm9sZSI6MSwiZW1haWwiOiJzYWt1cmFAZ21haWwuY29tIiwiaWF0IjoxNzA4ODQ5Mzk5fQ.oujHkXukgj_bTCx7YSSx5_6NwOWb_7aXzLGlra9uvBU";
+    // Ambil token dari local storage
+    const token = localStorage.getItem("token");
+
     try {
       const response = await axios.delete(
         `http://127.0.0.1:8080/admin/delete_produk/${productId}`,
@@ -48,8 +51,12 @@ class ManageProduct extends Component {
       );
 
       if (response.status === 200) {
+        // Hapus produk dari state
         this.setState((prevState) => ({
           products: prevState.products.filter(
+            (product) => product.id_produk !== productId
+          ),
+          filteredProducts: prevState.filteredProducts.filter(
             (product) => product.id_produk !== productId
           ),
         }));
@@ -64,11 +71,11 @@ class ManageProduct extends Component {
   };
 
   handleSearch = (event) => {
-    const searchTerm = event.target.value.toLowerCase(); // Mengambil nilai input dan mengonversi menjadi lowercase
+    const searchTerm = event.target.value.toLowerCase();
     const filteredProducts = this.state.products.filter((product) =>
       product.nama_produk.toLowerCase().includes(searchTerm)
-    ); // Mencocokkan produk dengan nama yang mengandung kata kunci pencarian
-    this.setState({ filteredProducts }); // Mengatur state filteredProducts dengan hasil filter
+    );
+    this.setState({ filteredProducts });
   };
 
   render() {

@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Container, Pagination, Form } from "react-bootstrap";
+import Swal from "sweetalert2";
 import axios from "axios";
 
 const ManageCustomer = () => {
   const [customers, setCustomers] = useState([]);
-  const [filteredCustomers, setFilteredCustomers] = useState([]);
-  const [error, setError] = useState(null); // Menggunakan variabel error
+  const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const [perPage] = useState(5); // Menentukan jumlah baris per halaman
-  const [searchTerm, setSearchTerm] = useState("");
+  const [perPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState(""); // State untuk nilai teks pencarian
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA2Njc5Nzk4fQ.7c25nDj03rJ7js-G6qB6pb5RPd1sMrbWYKJTyvDbNts";
+        const token = localStorage.getItem("token");
         const response = await axios.get(
           "http://127.0.0.1:8080/admin/list_customer",
           {
@@ -23,58 +22,79 @@ const ManageCustomer = () => {
             },
           }
         );
-        setCustomers(response.data.data); // Mengambil data dari respons
-        setFilteredCustomers(response.data.data); // Menyimpan data awal tanpa filter
+        setCustomers(response.data.data);
+        console.log("Data pelanggan berhasil diambil:", response.data);
       } catch (error) {
         console.error("Error fetching customers:", error);
-        setError("Error fetching customers"); // Menyimpan pesan kesalahan dalam variabel error
+        setError("Error fetching customers");
       }
     };
 
     fetchCustomers();
   }, []);
 
-  const handleDelete = (id) => {
-    console.log("Deleting customer with id:", id);
-    // Tambahkan logika penghapusan data pelanggan di sini
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.delete(
+        `http://127.0.0.1:8080/admin/delete_customer/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setCustomers(
+          customers.filter((customer) => customer.id_pelanggan !== id)
+        );
+        Swal.fire("Deleted!", "Customer has been deleted.", "success");
+      } else {
+        Swal.fire("Error!", "Failed to delete customer.", "error");
+      }
+    } catch (error) {
+      console.error("Error deleting customer:", error);
+      Swal.fire("Error!", "Failed to delete customer.", "error");
+    }
   };
 
-  const pageCount = Math.ceil(filteredCustomers.length / perPage);
+  const pageCount = Math.ceil(customers.length / perPage);
   const pages = [...Array(pageCount).keys()].map((i) => i + 1);
 
   const startIndex = (page - 1) * perPage;
   const endIndex = startIndex + perPage;
-  const currentCustomers = filteredCustomers.slice(startIndex, endIndex);
+  const currentCustomers = customers.slice(startIndex, endIndex);
+
+  // Logika untuk menyaring data berdasarkan teks pencarian
+  const filteredCustomers = currentCustomers.filter((customer) =>
+    customer.nama.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
   };
 
-  const handleSearch = (e) => {
-    const searchTerm = e.target.value;
-    setSearchTerm(searchTerm);
-    const filtered = customers.filter((customer) =>
-      customer.nama.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCustomers(filtered);
+  // Fungsi untuk menangani perubahan teks pencarian
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+    console.log("Search term:", e.target.value); // Tambahkan log di sini
   };
 
   return (
     <div className="mt-4">
       <Container>
-        {error && <p className="text-danger">{error}</p>}{" "}
-        {/* Menampilkan pesan kesalahan jika terjadi */}
-        <div className="d-flex justify-content-end mb-3">
-          <Form.Control
-            type="text"
-            placeholder="Search by name"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
+        {error && <p className="text-danger">{error}</p>}
         <div style={{ overflowX: "auto" }}>
-          {" "}
-          {/* Mengatur scroll horizontal */}
+          <Form className="mb-3">
+            <Form.Group controlId="formSearch">
+              <Form.Control
+                type="text"
+                placeholder="Search by name"
+                value={searchTerm}
+                onChange={handleSearchTermChange} // Memanggil fungsi handleSearchTermChange saat nilai berubah
+              />
+            </Form.Group>
+          </Form>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -87,7 +107,7 @@ const ManageCustomer = () => {
               </tr>
             </thead>
             <tbody>
-              {currentCustomers.map((customer) => (
+              {filteredCustomers.map((customer) => (
                 <tr key={customer.id_pelanggan}>
                   <td>{customer.id_pelanggan}</td>
                   <td>{customer.email}</td>

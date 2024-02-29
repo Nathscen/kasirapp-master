@@ -15,24 +15,34 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    const getData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        this.props.history.push("/login");
-      }
-      const response = await axios({
-        method: "get",
-        url: "http://127.0.0.1:8080/petugas/list_produk",
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjYsIm5hbWEiOiJrYXNpciIsInJvbGUiOjMsImVtYWlsIjoia2FzaXJAZ21haWwuY29tIiwiaWF0IjoxNzA4ODkzNjk1fQ.KYs-RbT1jNb68UXM9VXQCiztQ0L8K1YvScZ9NjUuKGs`,
-        },
-      });
+    this.getData();
+  }
+
+  getData = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      this.props.history.push("/login");
+      return; // Stop further execution
+    }
+
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8080/petugas/list_produk",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       this.setState({
         menus: response.data.data,
       });
-    };
-    getData();
-  }
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+      // Handle error (e.g., redirect to login page, show error message)
+    }
+  };
+
   render() {
     const { menus, keranjangs } = this.state;
     return (

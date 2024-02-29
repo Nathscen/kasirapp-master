@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import axios from "axios";
+import Swal from "sweetalert2"; // Import SweetAlert
 
 class AddProduct extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class AddProduct extends Component {
       price: "",
       stock: "",
       image: null,
+      imageUrl: "", // State untuk menyimpan URL gambar
       error: null,
     };
 
@@ -22,6 +24,15 @@ class AddProduct extends Component {
       this.setState({
         image: event.target.files[0],
       });
+
+      // Membaca URL gambar yang dipilih
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({
+          imageUrl: reader.result,
+        });
+      };
+      reader.readAsDataURL(event.target.files[0]);
     } else {
       this.setState({
         [event.target.name]: event.target.value,
@@ -51,8 +62,7 @@ class AddProduct extends Component {
 
     console.log("Form Data:", formData); // Log form data to inspect
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjIsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA1NjQ1NzAzfQ.83drLyuMv2lRYB0nVup6GSuTjrHsbQobSCFUeKcSsls";
+    const token = localStorage.getItem("token"); // Ambil token dari local storage
 
     axios
       .post("http://127.0.0.1:8080/admin/add_produk", formData, {
@@ -70,8 +80,11 @@ class AddProduct extends Component {
           price: "",
           stock: "",
           image: null,
+          imageUrl: "",
           error: null,
         });
+        // Show SweetAlert
+        Swal.fire("Success", "Product added successfully!", "success");
       })
       .catch((error) => {
         // Handle error, for example show error message
@@ -101,6 +114,14 @@ class AddProduct extends Component {
                 name="image"
                 onChange={this.handleChange}
               />
+              {this.state.imageUrl && (
+                <img
+                  src={this.state.imageUrl}
+                  alt="Uploaded"
+                  className="mt-3"
+                  style={{ width: "100%", maxWidth: "300px" }}
+                />
+              )}
             </Form.Group>
 
             <Form.Group controlId="productName">

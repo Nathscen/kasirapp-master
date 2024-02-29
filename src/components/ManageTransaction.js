@@ -6,21 +6,21 @@ import {
   Pagination,
   DropdownButton,
   Dropdown,
+  Button,
 } from "react-bootstrap";
 
 function ManageTransaction() {
   const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [transactionsPerPage] = useState(10); // Jumlah transaksi per halaman
+  const [transactionsPerPage] = useState(10);
+  const [sortBy, setSortBy] = useState("id_penjualan");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [error, setError] = useState(null);
-  const [sortBy, setSortBy] = useState("id_penjualan"); // Default sort by id_penjualan
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order ascending
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWEiOiJhZG1pbiIsInJvbGUiOjEsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwiaWF0IjoxNzA2Njc5Nzk4fQ.7c25nDj03rJ7js-G6qB6pb5RPd1sMrbWYKJTyvDbNts";
+        const token = localStorage.getItem("token");
         const response = await axios.get(
           "http://127.0.0.1:8080/admin/list_transaksi",
           {
@@ -30,6 +30,7 @@ function ManageTransaction() {
           }
         );
         setTransactions(response.data.data);
+        console.log("Data transaksi berhasil diambil:", response.data);
       } catch (error) {
         console.error("Error fetching transactions:", error);
         setError("Error fetching transactions");
@@ -39,18 +40,13 @@ function ManageTransaction() {
     fetchTransactions();
   }, []);
 
-  // Menghitung index transaksi pertama dan terakhir pada halaman saat ini
-  const indexOfLastTransaction = currentPage * transactionsPerPage;
-  const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
-  const currentTransactions = transactions.slice(
-    indexOfFirstTransaction,
-    indexOfLastTransaction
-  );
+  const handleRefund = (transactionId) => {
+    console.log("Refunding transaction with ID:", transactionId);
+    // Implement logic for refunding transaction
+  };
 
-  // Mengubah halaman
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Mengubah metode sort dan order
   const changeSortBy = (sortField) => {
     if (sortField === sortBy) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -60,14 +56,20 @@ function ManageTransaction() {
     }
   };
 
-  // Fungsi untuk melakukan sorting
-  const sortedTransactions = [...currentTransactions].sort((a, b) => {
+  const sortedTransactions = [...transactions].sort((a, b) => {
     if (sortOrder === "asc") {
       return a[sortBy] - b[sortBy];
     } else {
       return b[sortBy] - a[sortBy];
     }
   });
+
+  const indexOfLastTransaction = currentPage * transactionsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
+  const currentTransactions = sortedTransactions.slice(
+    indexOfFirstTransaction,
+    indexOfLastTransaction
+  );
 
   return (
     <Container className="mt-5">
@@ -90,7 +92,7 @@ function ManageTransaction() {
           Total Harga
         </Dropdown.Item>
         <Dropdown.Item onClick={() => changeSortBy("created_at")}>
-          Created At
+          Tanggal Transaksi
         </Dropdown.Item>
       </DropdownButton>
       <Table striped bordered hover>
@@ -99,16 +101,25 @@ function ManageTransaction() {
             <th>ID Penjualan</th>
             <th>ID Pelanggan</th>
             <th>Total Harga</th>
-            <th>Created At</th>
+            <th>Tanggal Transaksi</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {sortedTransactions.map((transaction) => (
+          {currentTransactions.map((transaction) => (
             <tr key={transaction.id_penjualan}>
               <td>{transaction.id_penjualan}</td>
               <td>{transaction.pelanggan_id_pelanggan}</td>
               <td>{transaction.total_harga}</td>
-              <td>{transaction.created_at}</td>
+              <td>{new Date(transaction.created_at).toLocaleDateString()}</td>
+              <td>
+                <Button
+                  variant="warning"
+                  onClick={() => handleRefund(transaction.id_penjualan)}
+                >
+                  Refund
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>

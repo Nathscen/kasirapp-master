@@ -22,7 +22,7 @@ const ManageCustomer = () => {
             },
           }
         );
-        setCustomers(response.data.data);
+        setCustomers(response.data.data.data_customer); // Mengubah respons di sini
         console.log("Data pelanggan berhasil diambil:", response.data);
       } catch (error) {
         console.error("Error fetching customers:", error);

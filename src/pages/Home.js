@@ -34,8 +34,10 @@ export default class Home extends Component {
           },
         }
       );
+      // Ubah penanganan respons di sini
+      const productList = response.data.data.listProduk || [];
       this.setState({
-        menus: response.data.data,
+        menus: productList,
       });
     } catch (error) {
       console.error("Failed to fetch data:", error);

@@ -45,12 +45,12 @@ const RegisterForm = () => {
 
   return (
     <div className="d-flex align-items-center" style={{ height: "100vh" }}>
-      <Container className="border p-5 w-50" style={{ background: "#9BB8E9" }}>
+      <Container className="border p-5 w-50" style={{ background: "#FFFFFF" }}>
         <Form
           onSubmit={handleSubmit}
           className="d-flex justify-content-center align-items-center flex-column gap-3"
         >
-          <h2 className="text-center text-white">Register</h2>
+          <h2 className="text-center">Register</h2>
           <Form.Group className="mb-3 w-100">
             <Form.Control
               type="email"

@@ -106,7 +106,7 @@ class ManageWorker extends Component {
                 <td>{worker.username}</td>
                 <td>
                   <Button
-                    variant="primary"
+                    variant="success"
                     className="text-decoration-none mr-2"
                     as={Link}
                     to={`/edit-worker/${worker.iduser}`} // Disertakan ID pekerja dalam URL

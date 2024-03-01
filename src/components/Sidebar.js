@@ -17,32 +17,39 @@ const Sidebar = () => {
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
     >
-      <CDBSidebar textColor="#365486" backgroundColor="#FFFFFF" shadow>
+      <CDBSidebar textColor="#FFFFFF" backgroundColor="#565555" shadow>
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
+            <NavLink exact to="/dashboard" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="tachometer-alt">
+                Dashboard
+              </CDBSidebarMenuItem>
+            </NavLink>
             <NavLink
               exact
               to="/manage-customer"
               activeClassName="activeClicked"
             >
-              <CDBSidebarMenuItem icon="columns">
+              <CDBSidebarMenuItem icon="users">
                 Manage Customer
               </CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/manage-product" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="table">
+              <CDBSidebarMenuItem icon="shopping-cart">
                 Manage Product
               </CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/manage-worker" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="user">Manage Worker</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="user-friends">
+                Manage Worker
+              </CDBSidebarMenuItem>
             </NavLink>
             <NavLink
               exact
               to="/manage-transaction"
               activeClassName="activeClicked"
             >
-              <CDBSidebarMenuItem icon="chart-line">
+              <CDBSidebarMenuItem icon="money-bill-alt">
                 Manage Transaction
               </CDBSidebarMenuItem>
             </NavLink>
@@ -52,7 +59,9 @@ const Sidebar = () => {
               activeClassName="activeClicked"
               onClick={handleLogout}
             >
-              <CDBSidebarMenuItem icon="user">Logout</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="sign-out-alt">
+                Logout
+              </CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>

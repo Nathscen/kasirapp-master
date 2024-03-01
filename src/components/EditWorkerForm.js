@@ -25,8 +25,11 @@ function EditWorkerForm() {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setUsername(data.username);
-        setEmail(data.email);
+        console.log("Worker data:", data.data);
+
+        // Update penanganan respons di sini
+        setUsername(data.data.username);
+        setEmail(data.data.email);
       } catch (error) {
         console.error("Error fetching worker data:", error);
         setError("Error fetching worker data");
@@ -34,7 +37,9 @@ function EditWorkerForm() {
     }
 
     fetchWorkerData();
-  }, [workerId]); // Ensure useEffect runs when workerId changes
+  }, [workerId]);
+
+  console.log(username, email);
 
   const handleEdit = async () => {
     const url = `http://127.0.0.1:8080/admin/edit_worker/${workerId}`;

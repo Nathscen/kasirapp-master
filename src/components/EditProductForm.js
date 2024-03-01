@@ -85,7 +85,7 @@ function EditProductForm() {
 
   return (
     <div>
-      <h3 className="text-center mb-5 mt-5">Edit Product </h3>
+      <h3 className="text-center mb-5 mt-5">Edit Product</h3>
       <Form onSubmit={handleFormSubmit}>
         <Form.Group as={Col} controlId="productImage">
           <Form.Label>Product Image</Form.Label>

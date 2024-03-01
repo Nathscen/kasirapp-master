@@ -25,9 +25,11 @@ class ManageProduct extends Component {
       })
       .then((response) => {
         console.log("Response from API:", response.data);
+        // Ubah penanganan respons di sini
+        const productList = response.data.data.listProduk || [];
         this.setState({
-          products: response.data.data,
-          filteredProducts: response.data.data,
+          products: productList,
+          filteredProducts: productList,
         });
       })
       .catch((error) => {

@@ -1,38 +1,46 @@
-import React, { useEffect, useRef } from "react";
-import Chart from "chart.js/auto";
+import React from "react";
+import { Card } from "react-bootstrap";
+import { BsPeople, BsBox, BsCashStack } from "react-icons/bs";
 
-const Grafik = ({ data }) => {
-  const chartRef = useRef(null);
+const Grafik = () => {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-around" }}>
+      {/* Card untuk menampilkan data pelanggan (customer) */}
+      <Card
+        style={{ width: "300px", margin: "10px", backgroundColor: "#C9D7DD" }}
+      >
+        <Card.Body>
+          <BsPeople size={40} />
+          <Card.Title>Data Customer</Card.Title>
+          <Card.Text>Jumlah pelanggan: 1000</Card.Text>
+        </Card.Body>
+      </Card>
 
-  useEffect(() => {
-    if (chartRef && chartRef.current) {
-      const ctx = chartRef.current.getContext("2d");
-      new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: data.map((item) => item.label),
-          datasets: [
-            {
-              label: "Penjualan",
-              data: data.map((item) => item.value),
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      });
-    }
-  }, [data]);
+      {/* Card untuk menampilkan data produk (product) */}
+      <Card
+        style={{ width: "300px", margin: "10px", backgroundColor: "#C9D7DD" }}
+      >
+        <Card.Body>
+          <BsBox size={40} />
+          <Card.Title>Data Product</Card.Title>
+          <Card.Text>Jumlah produk: 500</Card.Text>
+          <Card.Text>Produk terlaris: Product A</Card.Text>
+        </Card.Body>
+      </Card>
 
-  return <canvas ref={chartRef} />;
+      {/* Card untuk menampilkan data pendapatan (income) */}
+      <Card
+        style={{ width: "300px", margin: "10px", backgroundColor: "#C9D7DD" }}
+      >
+        <Card.Body>
+          <BsCashStack size={40} />
+          <Card.Title>Data Income</Card.Title>
+          <Card.Text>Total pendapatan: $5000</Card.Text>
+          <Card.Text>Pendapatan bulan ini: $1000</Card.Text>
+        </Card.Body>
+      </Card>
+    </div>
+  );
 };
 
 export default Grafik;

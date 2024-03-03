@@ -35,9 +35,9 @@ const LoginForm = () => {
       if (role === 1) {
         history.push("/dashboard");
       } else if (role === 2) {
-        history.push("/kasir");
+        history.push("/menu");
       } else if (role === 3) {
-        history.push("/");
+        history.push("/menu");
       }
     } catch (err) {
       console.log(err);

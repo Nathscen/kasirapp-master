@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import { Hasil, Menus, NavbarComponent } from "../components";
 import axios from "axios";
-import Sidebar from "../components/Sidebar";
+import SidebarKasir from "../components/SidebarKasir";
 
 export default class Home extends Component {
   constructor(props) {
@@ -54,7 +54,7 @@ export default class Home extends Component {
           <Container fluid>
             <Row>
               <Col md={3}>
-                <Sidebar />
+                <SidebarKasir />
               </Col>
               <Col className="mt-3">
                 <h4>

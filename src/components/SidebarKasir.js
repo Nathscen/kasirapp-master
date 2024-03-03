@@ -2,40 +2,48 @@ import React from "react";
 import {
   CDBSidebar,
   CDBSidebarContent,
-  CDBSidebarFooter,
   CDBSidebarMenu,
   CDBSidebarMenuItem,
 } from "cdbreact";
 import { NavLink } from "react-router-dom";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const SidebarKasir = () => {
+  const handleLogout = () => {
+    // Hapus token dari localStorage saat logout
+    localStorage.removeItem("token");
+  };
+
   return (
     <div
       style={{ display: "flex", height: "100vh", overflow: "scroll initial" }}
     >
-      <CDBSidebar textColor="#365486" backgroundColor="#FFFFFF" shadow>
+      <CDBSidebar textColor="#FFFFFF" backgroundColor="#565555" shadow>
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
+            <NavLink exact to="/menu" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="bars">Menu</CDBSidebarMenuItem>
+            </NavLink>
             <NavLink
               exact
-              as={Link}
               to="/manage-product-kasir"
               activeClassName="activeClicked"
             >
-              <CDBSidebarMenuItem icon="table">
+              <CDBSidebarMenuItem icon="shopping-cart">
                 Manage Product
               </CDBSidebarMenuItem>
             </NavLink>
-            <NavLink exact to="/login" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="user">Logout</CDBSidebarMenuItem>
+            <NavLink
+              exact
+              to="/login"
+              activeClassName="activeClicked"
+              onClick={handleLogout}
+            >
+              <CDBSidebarMenuItem icon="sign-out-alt">
+                Logout
+              </CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>
-
-        <CDBSidebarFooter style={{ textAlign: "center" }}>
-          <div style={{ padding: "20px 5px" }}>Sidebar Footer</div>
-        </CDBSidebarFooter>
       </CDBSidebar>
     </div>
   );

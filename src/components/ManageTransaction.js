@@ -1,20 +1,13 @@
+// ManageTransaction.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Container,
-  Table,
-  Pagination,
-  DropdownButton,
-  Dropdown,
-  Button,
-} from "react-bootstrap";
+import { Container, Table, Button, Modal } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function ManageTransaction() {
   const [transactions, setTransactions] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [transactionsPerPage] = useState(10);
-  const [sortBy, setSortBy] = useState("id_penjualan");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -40,61 +33,28 @@ function ManageTransaction() {
     fetchTransactions();
   }, []);
 
-  const handleRefund = (transactionId) => {
+  const handleRefund = async (transactionId) => {
     console.log("Refunding transaction with ID:", transactionId);
-    // Implement logic for refunding transaction
-  };
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const changeSortBy = (sortField) => {
-    if (sortField === sortBy) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortBy(sortField);
-      setSortOrder("asc");
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `http://127.0.0.1:8080/admin/detail_transaksi?idtransaksi=${transactionId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSelectedTransaction(response.data.data);
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error fetching transaction details:", error);
     }
   };
-
-  const sortedTransactions = [...transactions].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a[sortBy] - b[sortBy];
-    } else {
-      return b[sortBy] - a[sortBy];
-    }
-  });
-
-  const indexOfLastTransaction = currentPage * transactionsPerPage;
-  const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
-  const currentTransactions = sortedTransactions.slice(
-    indexOfFirstTransaction,
-    indexOfLastTransaction
-  );
 
   return (
     <Container className="mt-5">
       {error && <p className="text-danger">{error}</p>}
-      <DropdownButton
-        id="dropdown-basic-button"
-        title={`Sort By: ${sortBy} (${sortOrder.toUpperCase()})`}
-        onSelect={() => changeSortBy(sortBy)}
-        className="mb-3"
-        style={{ width: "200px" }}
-        variant="secondary"
-      >
-        <Dropdown.Item onClick={() => changeSortBy("id_penjualan")}>
-          ID Penjualan
-        </Dropdown.Item>
-        <Dropdown.Item onClick={() => changeSortBy("pelanggan_id_pelanggan")}>
-          ID Pelanggan
-        </Dropdown.Item>
-        <Dropdown.Item onClick={() => changeSortBy("total_harga")}>
-          Total Harga
-        </Dropdown.Item>
-        <Dropdown.Item onClick={() => changeSortBy("created_at")}>
-          Tanggal Transaksi
-        </Dropdown.Item>
-      </DropdownButton>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -106,7 +66,7 @@ function ManageTransaction() {
           </tr>
         </thead>
         <tbody>
-          {currentTransactions.map((transaction) => (
+          {transactions.map((transaction) => (
             <tr key={transaction.id_penjualan}>
               <td>{transaction.id_penjualan}</td>
               <td>{transaction.pelanggan_id_pelanggan}</td>
@@ -115,6 +75,8 @@ function ManageTransaction() {
               <td>
                 <Button
                   variant="warning"
+                  as={Link}
+                  to={`/manage-transaction/${transaction.id_penjualan}`}
                   onClick={() => handleRefund(transaction.id_penjualan)}
                 >
                   Refund
@@ -124,15 +86,33 @@ function ManageTransaction() {
           ))}
         </tbody>
       </Table>
-      <Pagination>
-        {Array.from({
-          length: Math.ceil(transactions.length / transactionsPerPage),
-        }).map((_, index) => (
-          <Pagination.Item key={index + 1} onClick={() => paginate(index + 1)}>
-            {index + 1}
-          </Pagination.Item>
-        ))}
-      </Pagination>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Transaction Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h5>Transaction ID: {selectedTransaction?.id_penjualan}</h5>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedTransaction?.detail_transaksi.map((detail, index) => (
+                <tr key={index}>
+                  <td>{detail.nama_produk}</td>
+                  <td>{detail.jumlah_produk}</td>
+                  <td>{detail.sub_total}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }

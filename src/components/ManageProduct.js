@@ -106,51 +106,53 @@ class ManageProduct extends Component {
         </Row>
         <Row>
           <Col>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>ID Product</th>
-                  <th>Photo</th>
-                  <th>Product</th>
-                  <th>Price</th>
-                  <th>Stock</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.filteredProducts.map((product) => (
-                  <tr key={product.id_produk}>
-                    <td>{product.id_produk}</td>
-                    <td>
-                      <img
-                        src={product.link_gambar}
-                        alt="Product"
-                        style={{ width: "100px" }}
-                      />
-                    </td>
-                    <td>{product.nama_produk}</td>
-                    <td>{`@Rp. ${product.harga.toLocaleString()}`}</td>
-                    <td>{product.stok}</td>
-                    <td>
-                      <Button
-                        variant="success"
-                        className="mr-2"
-                        as={Link}
-                        to={`/edit-product/${product.id_produk}`}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => this.handleDelete(product.id_produk)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
+            <div style={{ overflowY: "auto", maxHeight: "500px" }}>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>ID Product</th>
+                    <th>Photo</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {this.state.filteredProducts.map((product) => (
+                    <tr key={product.id_produk}>
+                      <td>{product.id_produk}</td>
+                      <td>
+                        <img
+                          src={product.link_gambar}
+                          alt="Product"
+                          style={{ width: "100px" }}
+                        />
+                      </td>
+                      <td>{product.nama_produk}</td>
+                      <td>{`@Rp. ${product.harga.toLocaleString()}`}</td>
+                      <td>{product.stok}</td>
+                      <td>
+                        <Button
+                          variant="success"
+                          className="mr-2"
+                          as={Link}
+                          to={`/edit-product/${product.id_produk}`}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => this.handleDelete(product.id_produk)}
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
           </Col>
         </Row>
       </Container>

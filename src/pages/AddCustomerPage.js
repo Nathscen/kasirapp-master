@@ -3,8 +3,8 @@ import AddCustomerForm from "../components/AddCustomerForm";
 
 function AddCustomerPage() {
   return (
-    <div>
-        <AddCustomerForm />
+    <div style={{ backgroundColor: "#C9D7DD", height: "100vh" }}>
+      <AddCustomerForm />
     </div>
   );
 }

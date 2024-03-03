@@ -4,9 +4,9 @@ import { Form, Button, Container } from "react-bootstrap";
 const AddCustomerForm = () => {
   return (
     <div className="d-flex align-items-center" style={{ height: "100vh" }}>
-      <Container className="border p-5 w-50" style={{ background: "#9BB8E9" }}>
+      <Container className="border p-5 w-50" style={{ background: "#FFFFFF" }}>
         <Form className="d-flex justify-content-center align-items-center flex-column gap-3">
-          <h3 className="text-center text-white">Customer Data</h3>
+          <h3 className="text-center">Customer Data</h3>
           <Form.Group className="mb-3 w-100" controlId="formName">
             <Form.Control type="text" placeholder="Name" />
           </Form.Group>

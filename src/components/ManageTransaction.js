@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Table, Button, Modal } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 function ManageTransaction() {
   const [transactions, setTransactions] = useState([]);
@@ -52,6 +53,33 @@ function ManageTransaction() {
     }
   };
 
+  const handleRefundTransaction = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const detailId = selectedTransaction[0].id_detail_penjualan;
+      const response = await axios.patch(
+        `http://127.0.0.1:8080/admin/refund_transaksi?iddetail=${detailId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Refund transaction successful:", response.data);
+      setShowModal(false);
+      // Menampilkan SweetAlert ketika refund berhasil
+      Swal.fire({
+        icon: "success",
+        title: "Refund Successful",
+        text: "The transaction has been refunded successfully.",
+      });
+    } catch (error) {
+      console.error("Error refunding transaction:", error);
+      setError("Error refunding transaction");
+    }
+  };
+
   return (
     <Container className="mt-5">
       {error && <p className="text-danger">{error}</p>}
@@ -96,6 +124,12 @@ function ManageTransaction() {
               selectedTransaction[0] &&
               selectedTransaction[0].penjualan_id_penjualan}
           </h5>
+          <h5>
+            Detail Transaction ID:{" "}
+            {selectedTransaction &&
+              selectedTransaction[0] &&
+              selectedTransaction[0].id_detail_penjualan}
+          </h5>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -121,6 +155,14 @@ function ManageTransaction() {
             </tbody>
           </Table>
         </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={handleRefundTransaction}>
+            Refund Transaction
+          </Button>
+        </Modal.Footer>
       </Modal>
     </Container>
   );

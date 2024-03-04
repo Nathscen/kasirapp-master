@@ -41,7 +41,7 @@ export default class TotalBayar extends Component {
                 className="mb-2 mt-4 mr-2"
                 size="lg"
                 as={Link}
-                to="/sukses"
+                to="/qr-page"
               >
                 <FontAwesomeIcon icon={faShoppingCart} />{" "}
                 <strong>PAYMENT</strong>

@@ -8,6 +8,7 @@ const Grafik = () => {
   const [customerCount, setCustomerCount] = useState(null);
   const [productCount, setProductCount] = useState(null);
   const [totalStock, setTotalStock] = useState(null);
+  const [bestSellerData, setBestSellerData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +51,14 @@ const Grafik = () => {
         console.log("Product Data:", productResponse.data); // Logging response
         setProductCount(productResponse.data.length);
         setTotalStock(productResponse.data.data.total_stok);
+
+        // Mengambil data best seller dari API
+        const bestSellerResponse = await axios.get(
+          "http://127.0.0.1:8080/admin/get_bestseller",
+          config
+        );
+        console.log("Best Seller Data:", bestSellerResponse.data); // Logging response
+        setBestSellerData(bestSellerResponse.data.data.data_best_seller);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -58,8 +67,19 @@ const Grafik = () => {
     fetchData();
   }, []);
 
+  // Fungsi untuk menambahkan koma pada angka
+  const numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
-    <div style={{ display: "flex", justifyContent: "space-around" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-around",
+        flexWrap: "wrap",
+      }}
+    >
       {/* Card untuk menampilkan data pelanggan (customer) */}
       <Card
         style={{ width: "300px", margin: "10px", backgroundColor: "#C9D7DD" }}
@@ -81,10 +101,10 @@ const Grafik = () => {
           <BsBox size={40} />
           <Card.Title>Data Product</Card.Title>
           {productCount !== null && (
-            <Card.Text>Jumlah produk: {productCount}</Card.Text>
-          )}
-          {totalStock !== null && (
-            <Card.Text>Total stok: {totalStock}</Card.Text>
+            <div>
+              <Card.Text>Jumlah produk: {productCount}</Card.Text>
+              <Card.Text>Total stok: {totalStock}</Card.Text>
+            </div>
           )}
         </Card.Body>
       </Card>
@@ -98,14 +118,48 @@ const Grafik = () => {
             <BsCashStack size={40} />
             <Card.Title>Data Income</Card.Title>
             <Card.Text>
-              Pendapatan Kotor: ${incomeData.pendapatan_kotor}
+              Pendapatan Kotor: Rp.{" "}
+              {numberWithCommas(incomeData.pendapatan_kotor)}
             </Card.Text>
             <Card.Text>
-              Pendapatan Bersih: ${incomeData.pendapatan_bersih}
+              Pendapatan Bersih: Rp.{" "}
+              {numberWithCommas(incomeData.pendapatan_bersih)}
             </Card.Text>
           </Card.Body>
         </Card>
       )}
+
+      {/* Card untuk menampilkan data best seller */}
+      <div style={{ width: "100%" }}>
+        <h2 style={{ textAlign: "left", marginLeft: "10px" }}>Best Seller</h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          {bestSellerData.map((item, index) => (
+            <Card
+              key={index}
+              style={{
+                width: "300px",
+                margin: "10px",
+                backgroundColor: "#C9D7DD",
+              }}
+            >
+              <Card.Img variant="top" src={item.link_gambar} />
+              <Card.Body>
+                <Card.Title>{item.nama_produk}</Card.Title>
+                <Card.Text>
+                  Harga: Rp. {numberWithCommas(item.harga_produk)}
+                </Card.Text>
+                <Card.Text>Jumlah Terjual: {item.total_harga}</Card.Text>
+              </Card.Body>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

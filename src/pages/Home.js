@@ -22,7 +22,7 @@ export default class Home extends Component {
     const token = localStorage.getItem("token");
     if (!token) {
       this.props.history.push("/login");
-      return; // Stop further execution
+      return;
     }
 
     try {
@@ -34,15 +34,20 @@ export default class Home extends Component {
           },
         }
       );
-      // Ubah penanganan respons di sini
+
       const productList = response.data.data.listProduk || [];
       this.setState({
         menus: productList,
       });
     } catch (error) {
       console.error("Failed to fetch data:", error);
-      // Handle error (e.g., redirect to login page, show error message)
     }
+  };
+
+  tambahProduk = (produk) => {
+    const { keranjangs } = this.state;
+    const newKeranjangs = [...keranjangs, produk];
+    this.setState({ keranjangs: newKeranjangs });
   };
 
   render() {
@@ -66,7 +71,7 @@ export default class Home extends Component {
                     <Menus
                       key={menu.id_produk}
                       menu={menu}
-                      masukKeranjang={this.masukKeranjang}
+                      tambahProduk={this.tambahProduk}
                     />
                   ))}
                 </Row>

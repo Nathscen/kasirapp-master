@@ -1,8 +1,6 @@
-// ManageTransaction.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Table, Button, Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 function ManageTransaction() {
   const [transactions, setTransactions] = useState([]);
@@ -45,10 +43,12 @@ function ManageTransaction() {
           },
         }
       );
+      console.log("Detail transaksi berhasil diambil:", response.data.data);
       setSelectedTransaction(response.data.data);
       setShowModal(true);
     } catch (error) {
       console.error("Error fetching transaction details:", error);
+      setError("Error fetching transaction details");
     }
   };
 
@@ -75,8 +75,6 @@ function ManageTransaction() {
               <td>
                 <Button
                   variant="warning"
-                  as={Link}
-                  to={`/manage-transaction/${transaction.id_penjualan}`}
                   onClick={() => handleRefund(transaction.id_penjualan)}
                 >
                   Refund
@@ -92,20 +90,31 @@ function ManageTransaction() {
           <Modal.Title>Transaction Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h5>Transaction ID: {selectedTransaction?.id_penjualan}</h5>
+          <h5>
+            Transaction ID:{" "}
+            {selectedTransaction &&
+              selectedTransaction[0] &&
+              selectedTransaction[0].penjualan_id_penjualan}
+          </h5>
           <Table striped bordered hover>
             <thead>
               <tr>
                 <th>Product Name</th>
                 <th>Quantity</th>
+                <th>Price</th>
                 <th>Subtotal</th>
               </tr>
             </thead>
             <tbody>
-              {selectedTransaction?.detail_transaksi.map((detail, index) => (
+              {selectedTransaction?.map((detail, index) => (
                 <tr key={index}>
-                  <td>{detail.nama_produk}</td>
+                  <td>
+                    {detail.produk
+                      ? detail.produk.nama_produk
+                      : "Product Not Available"}
+                  </td>
                   <td>{detail.jumlah_produk}</td>
+                  <td>{detail.produk ? detail.produk.harga : "-"}</td>
                   <td>{detail.sub_total}</td>
                 </tr>
               ))}

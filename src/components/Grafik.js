@@ -132,18 +132,12 @@ const Grafik = () => {
       {/* Card untuk menampilkan data best seller */}
       <div style={{ width: "100%" }}>
         <h2 style={{ textAlign: "left", marginLeft: "10px" }}>Best Seller</h2>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
           {bestSellerData.map((item, index) => (
             <Card
               key={index}
               style={{
-                width: "300px",
+                width: "calc(33.33% - 20px)", // Mengatur lebar card agar menampilkan tiga card dalam satu baris
                 margin: "10px",
                 backgroundColor: "#C9D7DD",
               }}

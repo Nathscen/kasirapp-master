@@ -37,7 +37,7 @@ const LoginForm = () => {
       } else if (role === 2) {
         history.push("/menu");
       } else if (role === 3) {
-        history.push("/menu");
+        history.push("/add-customer");
       }
     } catch (err) {
       console.log(err);
